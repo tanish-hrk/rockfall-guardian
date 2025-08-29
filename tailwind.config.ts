@@ -61,7 +61,36 @@ export default {
 					'accent-foreground': 'hsl(var(--sidebar-accent-foreground))',
 					border: 'hsl(var(--sidebar-border))',
 					ring: 'hsl(var(--sidebar-ring))'
+				},
+				// Mining-specific semantic colors
+				earth: {
+					primary: 'hsl(var(--earth-primary))',
+					secondary: 'hsl(var(--earth-secondary))'
+				},
+				rock: {
+					slate: 'hsl(var(--rock-slate))'
+				},
+				risk: {
+					safe: 'hsl(var(--emerald-safe))',
+					low: 'hsl(var(--emerald-safe))',
+					moderate: 'hsl(var(--orange-moderate))',
+					high: 'hsl(var(--amber-warning))',
+					critical: 'hsl(var(--red-critical))'
 				}
+			},
+			backgroundImage: {
+				'gradient-earth': 'var(--gradient-earth)',
+				'gradient-slate': 'var(--gradient-slate)',
+				'gradient-risk': 'var(--gradient-risk)',
+				'gradient-hero': 'var(--gradient-hero)'
+			},
+			boxShadow: {
+				'mining': 'var(--shadow-mining)',
+				'earth': 'var(--shadow-earth)',
+				'glow': 'var(--shadow-glow)'
+			},
+			transitionTimingFunction: {
+				'mining': 'var(--transition-mining)'
 			},
 			borderRadius: {
 				lg: 'var(--radius)',
