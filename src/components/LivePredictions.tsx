@@ -42,7 +42,7 @@ const LivePredictions: React.FC<LivePredictionsProps> = ({ className }) => {
 
   const fetchPredictions = useCallback(async () => {
     try {
-      const response = await fetch('http://localhost:8000/api/live-predictions');
+      const response = await fetch('https://rock-server-eight.vercel.app/api/live-predictions');
       if (!response.ok) throw new Error('Failed to fetch predictions');
       const data = await response.json();
       setPredictions(data);

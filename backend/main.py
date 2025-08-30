@@ -12,7 +12,7 @@ app = FastAPI(title="Rockfall Guardian API", version="1.0.0")
 # Add CORS middleware
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:8080", "http://localhost:3000", "http://localhost:8081"],
+    allow_origins=["http://localhost:8080", "http://localhost:3000", "http://localhost:8081", "https://rockgaurd-ai.vercel.app"],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
