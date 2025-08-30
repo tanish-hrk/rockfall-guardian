@@ -48,7 +48,7 @@ class SensorReading(BaseModel):
 # Load mine data from JSON files
 def load_mine_data():
     mine_data = []
-    data_dir = "src/data/mines"
+    data_dir = "../src/data/mines"
 
     for i in range(1, 17):  # 16 mines
         file_path = f"{data_dir}/part_{i}.json"
@@ -311,7 +311,7 @@ async def get_sensor_trends(mine_id: str, hours: int = 24):
         # Extract mine number from ID
         mine_number = int(mine_id.split("-")[1])
 
-        file_path = f"src/data/mines/part_{mine_number}.json"
+        file_path = f"../src/data/mines/part_{mine_number}.json"
         data = []
         with open(file_path, 'r') as f:
             for line in f:
