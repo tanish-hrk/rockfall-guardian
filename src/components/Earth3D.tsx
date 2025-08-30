@@ -1,142 +1,214 @@
-import React, { useRef, useMemo } from 'react';
+import React, { useRef, Suspense } from 'react';
 import { Canvas, useFrame } from '@react-three/fiber';
-import { OrbitControls, Sphere, Html } from '@react-three/drei';
+import { OrbitControls, Sphere, Stars, Float, Text } from '@react-three/drei';
 import * as THREE from 'three';
-import { minesData } from '@/data/mineData';
 
-interface MineMarkerProps {
-  mine: any;
-  position: [number, number, number];
-  onMineClick: (mine: any) => void;
-}
+const Globe: React.FC = () => {
+  const globeRef = useRef<THREE.Mesh>(null);
+  const atmosphereRef = useRef<THREE.Mesh>(null);
 
-const MineMarker: React.FC<MineMarkerProps> = ({ mine, position, onMineClick }) => {
-  const meshRef = useRef<THREE.Mesh>(null);
-  
   useFrame((state) => {
-    if (meshRef.current) {
-      meshRef.current.lookAt(state.camera.position);
+    if (globeRef.current) {
+      globeRef.current.rotation.y += 0.005;
+      globeRef.current.rotation.x += 0.002;
+    }
+    if (atmosphereRef.current) {
+      atmosphereRef.current.rotation.y += 0.003;
     }
   });
-
-  const getRiskColor = (riskLevel: string) => {
-    switch (riskLevel) {
-      case 'Low': return '#10b981';
-      case 'Moderate': return '#f59e0b';
-      case 'High': return '#f97316';
-      case 'Critical': return '#ef4444';
-      default: return '#6b7280';
-    }
-  };
-
-  return (
-    <group position={position}>
-      <mesh
-        ref={meshRef}
-        onClick={() => onMineClick(mine)}
-        onPointerOver={(e) => {
-          e.stopPropagation();
-          document.body.style.cursor = 'pointer';
-        }}
-        onPointerOut={() => {
-          document.body.style.cursor = 'auto';
-        }}
-      >
-        <sphereGeometry args={[0.02, 8, 8]} />
-        <meshBasicMaterial color={getRiskColor(mine.riskLevel)} />
-      </mesh>
-      <Html distanceFactor={15} position={[0, 0.05, 0]}>
-        <div className="bg-card/90 backdrop-blur-sm border border-border rounded-lg px-2 py-1 text-xs font-medium shadow-mining pointer-events-none">
-          <div className="text-card-foreground">{mine.name}</div>
-          <div className="text-muted-foreground">{mine.type}</div>
-        </div>
-      </Html>
-    </group>
-  );
-};
-
-const Earth: React.FC<{ onMineClick: (mine: any) => void }> = ({ onMineClick }) => {
-  const earthRef = useRef<THREE.Mesh>(null);
-  
-  useFrame(() => {
-    if (earthRef.current) {
-      earthRef.current.rotation.y += 0.001;
-    }
-  });
-
-  // Convert lat/lng to 3D coordinates on sphere
-  const minePositions = useMemo(() => {
-    return minesData.map(mine => {
-      const lat = (mine.location.lat * Math.PI) / 180;
-      const lng = (mine.location.lng * Math.PI) / 180;
-      const radius = 1.01; // Slightly above earth surface
-      
-      const x = radius * Math.cos(lat) * Math.cos(lng);
-      const y = radius * Math.sin(lat);
-      const z = radius * Math.cos(lat) * Math.sin(lng);
-      
-      return { mine, position: [x, y, z] as [number, number, number] };
-    });
-  }, []);
 
   return (
     <group>
-      <Sphere ref={earthRef} args={[1, 64, 64]}>
-        <meshPhongMaterial
-          color="#2563eb"
-          transparent
-          opacity={0.8}
-          shininess={100}
-        />
-      </Sphere>
-      
-      {/* Earth-like texture overlay */}
-      <Sphere args={[1.005, 64, 64]}>
+      {/* Stars background */}
+      <Stars
+        radius={100}
+        depth={50}
+        count={1000}
+        factor={4}
+        saturation={0}
+        fade={true}
+      />
+
+      {/* Main Globe */}
+      <Float speed={2} rotationIntensity={1} floatIntensity={0.5}>
+        <Sphere ref={globeRef} args={[1.5, 64, 64]}>
+          <meshPhongMaterial
+            color="#1e40af"
+            transparent
+            opacity={0.8}
+            shininess={100}
+            emissive="#1e40af"
+            emissiveIntensity={0.1}
+          />
+        </Sphere>
+      </Float>
+
+      {/* Globe surface details */}
+      <Sphere args={[1.501, 64, 64]}>
         <meshBasicMaterial
           color="#22c55e"
           transparent
           opacity={0.3}
         />
       </Sphere>
-      
-      {/* Mine markers */}
-      {minePositions.map(({ mine, position }) => (
-        <MineMarker
-          key={mine.id}
-          mine={mine}
-          position={position}
-          onMineClick={onMineClick}
+
+      {/* Atmosphere glow */}
+      <Sphere ref={atmosphereRef} args={[1.8, 32, 32]}>
+        <meshBasicMaterial
+          color="#3b82f6"
+          transparent
+          opacity={0.15}
+          side={THREE.BackSide}
         />
+      </Sphere>
+
+      {/* Outer glow */}
+      <Sphere args={[2.2, 16, 16]}>
+        <meshBasicMaterial
+          color="#60a5fa"
+          transparent
+          opacity={0.05}
+          side={THREE.BackSide}
+        />
+      </Sphere>
+
+      {/* Floating particles around the globe */}
+      {Array.from({ length: 20 }, (_, i) => (
+        <Float key={i} speed={1 + Math.random()} rotationIntensity={0.5} floatIntensity={1}>
+          <mesh position={[
+            (Math.random() - 0.5) * 6,
+            (Math.random() - 0.5) * 6,
+            (Math.random() - 0.5) * 6
+          ]}>
+            <sphereGeometry args={[0.02, 8, 8]} />
+            <meshBasicMaterial
+              color="#ffffff"
+              transparent
+              opacity={Math.random() * 0.6 + 0.2}
+            />
+          </mesh>
+        </Float>
       ))}
+
+      {/* Connection lines */}
+      {Array.from({ length: 8 }, (_, i) => {
+        const angle = (i / 8) * Math.PI * 2;
+        const x1 = Math.cos(angle) * 1.6;
+        const z1 = Math.sin(angle) * 1.6;
+        const x2 = Math.cos(angle + Math.PI / 4) * 1.6;
+        const z2 = Math.sin(angle + Math.PI / 4) * 1.6;
+
+        return (
+          <mesh key={i} position={[(x1 + x2) / 2, 0, (z1 + z2) / 2]}>
+            <cylinderGeometry args={[0.01, 0.01, Math.sqrt((x2-x1)**2 + (z2-z1)**2)]} />
+            <meshBasicMaterial color="#60a5fa" transparent opacity={0.3} />
+          </mesh>
+        );
+      })}
     </group>
   );
 };
 
 interface Earth3DProps {
-  onMineClick: (mine: any) => void;
+  onMineClick?: () => void;
 }
 
 const Earth3D: React.FC<Earth3DProps> = ({ onMineClick }) => {
   return (
-    <div className="w-full h-full">
-      <Canvas
-        camera={{ position: [0, 0, 3], fov: 60 }}
-        className="cursor-grab active:cursor-grabbing"
-      >
-        <ambientLight intensity={0.4} />
-        <pointLight position={[10, 10, 10]} intensity={1} />
-        <Earth onMineClick={onMineClick} />
-        <OrbitControls
-          enablePan={false}
-          enableZoom={true}
-          minDistance={2}
-          maxDistance={8}
-          autoRotate
-          autoRotateSpeed={0.5}
-        />
-      </Canvas>
+    <div className="w-full h-full absolute inset-0 -z-10">
+      <Suspense fallback={
+        <div className="w-full h-full bg-gradient-to-br from-slate-900 via-blue-900 to-slate-800 flex items-center justify-center">
+          <div className="text-white text-lg">Loading 3D Earth...</div>
+        </div>
+      }>
+        <Canvas
+          camera={{ position: [0, 0, 3.5], fov: 50 }}
+          className="cursor-grab active:cursor-grabbing"
+          gl={{
+            antialias: true,
+            alpha: true,
+            powerPreference: "high-performance",
+            failIfMajorPerformanceCaveat: false
+          }}
+          style={{
+            background: 'transparent',
+            width: '100%',
+            height: '100%'
+          }}
+          onCreated={({ gl }) => {
+            gl.setClearColor('#000000', 0);
+          }}
+        >
+          <ambientLight intensity={0.4} />
+          <pointLight position={[10, 10, 10]} intensity={0.8} />
+          <pointLight position={[-10, -10, -10]} intensity={0.3} color="#3b82f6" />
+          <Globe />
+          <OrbitControls
+            enablePan={false}
+            enableZoom={true}
+            minDistance={2.5}
+            maxDistance={6}
+            autoRotate
+            autoRotateSpeed={0.3}
+            enableDamping
+            dampingFactor={0.05}
+          />
+        </Canvas>
+      </Suspense>
     </div>
   );
 };
 
+interface MagicGlobeProps {
+  className?: string;
+}
+
+const MagicGlobe: React.FC<MagicGlobeProps> = ({ className = "" }) => {
+  return (
+    <div className={`w-full h-full relative ${className}`}>
+      <Suspense fallback={
+        <div className="w-full h-full bg-gradient-to-br from-slate-900 via-blue-900 to-slate-800 flex items-center justify-center rounded-2xl">
+          <div className="text-white text-lg font-medium">Loading Globe...</div>
+        </div>
+      }>
+        <Canvas
+          camera={{ position: [0, 0, 5], fov: 45 }}
+          className="cursor-grab active:cursor-grabbing"
+          gl={{
+            antialias: true,
+            alpha: true,
+            powerPreference: "default",
+            failIfMajorPerformanceCaveat: false,
+            preserveDrawingBuffer: true
+          }}
+          style={{
+            background: 'radial-gradient(circle at center, #0f172a 0%, #1e293b 50%, #0f172a 100%)',
+            borderRadius: '1rem'
+          }}
+          dpr={[1, 2]}
+        >
+          <ambientLight intensity={0.4} />
+          <pointLight position={[10, 10, 10]} intensity={0.8} />
+          <pointLight position={[-10, -10, -10]} intensity={0.3} color="#3b82f6" />
+          <Globe />
+          <OrbitControls
+            enablePan={false}
+            enableZoom={true}
+            minDistance={3}
+            maxDistance={8}
+            autoRotate
+            autoRotateSpeed={0.5}
+            enableDamping
+            dampingFactor={0.05}
+          />
+        </Canvas>
+
+        {/* Overlay gradient for better text readability */}
+        <div className="absolute inset-0 bg-gradient-to-t from-black/20 via-transparent to-transparent rounded-2xl pointer-events-none" />
+      </Suspense>
+    </div>
+  );
+};
+
+export { Earth3D };
 export default Earth3D;

@@ -20,7 +20,7 @@ const Index = () => {
       {currentPage === 'landing' ? (
         <Landing onNavigateToDashboard={handleNavigateToDashboard} />
       ) : (
-        <Dashboard />
+        <Dashboard onNavigateToLanding={handleNavigateToLanding} />
       )}
     </div>
   );

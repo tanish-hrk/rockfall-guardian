@@ -10,6 +10,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Separator } from '@/components/ui/separator';
 import { Mine, generateSensorData, generateRockfallEvents } from '@/data/mineData';
 import RiskChart from './RiskChart';
+import SensorCharts from './SensorCharts';
 import {
   Activity,
   AlertTriangle,
@@ -272,6 +273,11 @@ const MineDetailModal: React.FC<MineDetailModalProps> = ({ mine, open, onOpenCha
                 </div>
               </CardContent>
             </Card>
+          </div>
+
+          {/* Real-time Sensor Charts */}
+          <div className="mt-6">
+            <SensorCharts mineId={mine.id} mineName={mine.name} />
           </div>
         </div>
       </DialogContent>

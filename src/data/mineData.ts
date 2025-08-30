@@ -144,7 +144,114 @@ export const minesData: Mine[] = [
     totalSensors: 125,
     lastUpdate: '2024-01-15T10:45:00Z',
     alertsActive: 5
+  },
+  
+
+  {
+    id: 'mine-009',
+    name: 'Khetri Copper Mine',
+    type: 'Copper',
+    location: { lat: 27.9881, lng: 75.7850, state: 'Rajasthan', district: 'Jhunjhunu' },
+    operationalStatus: 'Active',
+    productionVolume: 3.6,
+    riskLevel: 'Moderate',
+    sensorsOnline: 82,
+    totalSensors: 90,
+    lastUpdate: '2024-01-15T11:00:00Z',
+    alertsActive: 2
+  },
+  {
+    id: 'mine-010',
+    name: 'Chiria Iron Ore Mine',
+    type: 'Iron Ore',
+    location: { lat: 22.3129, lng: 85.2760, state: 'Jharkhand', district: 'West Singhbhum' },
+    operationalStatus: 'Active',
+    productionVolume: 30.5,
+    riskLevel: 'High',
+    sensorsOnline: 101,
+    totalSensors: 110,
+    lastUpdate: '2024-01-15T10:15:00Z',
+    alertsActive: 3
+  },
+  {
+    id: 'mine-011',
+    name: 'Majri Open Pit',
+    type: 'Coal',
+    location: { lat: 20.9400, lng: 78.6200, state: 'Maharashtra', district: 'Nagpur' },
+    operationalStatus: 'Active',
+    productionVolume: 21.8,
+    riskLevel: 'Critical',
+    sensorsOnline: 115,
+    totalSensors: 130,
+    lastUpdate: '2024-01-15T11:30:00Z',
+    alertsActive: 6
+  },
+  {
+    id: 'mine-012',
+    name: 'Dalli-Rajhara Iron Ore Mine',
+    type: 'Iron Ore',
+    location: { lat: 20.6000, lng: 81.1000, state: 'Chhattisgarh', district: 'Balod' },
+    operationalStatus: 'Active',
+    productionVolume: 26.4,
+    riskLevel: 'Moderate',
+    sensorsOnline: 73,
+    totalSensors: 80,
+    lastUpdate: '2024-01-15T09:00:00Z',
+    alertsActive: 1
+  },
+  {
+    id: 'mine-013',
+    name: 'Balaghat Manganese Mine',
+    type: 'Iron Ore',
+    location: { lat: 21.8000, lng: 80.2000, state: 'Madhya Pradesh', district: 'Balaghat' },
+    operationalStatus: 'Active',
+    productionVolume: 19.2,
+    riskLevel: 'High',
+    sensorsOnline: 88,
+    totalSensors: 95,
+    lastUpdate: '2024-01-15T10:20:00Z',
+    alertsActive: 4
+  },
+  {
+    id: 'mine-014',
+    name: 'Kudremukh Iron Ore Mine',
+    type: 'Iron Ore',
+    location: { lat: 13.6000, lng: 75.2500, state: 'Karnataka', district: 'Chikkamagaluru' },
+    operationalStatus: 'Inactive',
+    productionVolume: 0,
+    riskLevel: 'Low',
+    sensorsOnline: 0,
+    totalSensors: 60,
+    lastUpdate: '2024-01-15T06:00:00Z',
+    alertsActive: 0
+  },
+  {
+    id: 'mine-015',
+    name: 'Panna Diamond Mine',
+    type: 'Limestone',
+    location: { lat: 24.7200, lng: 80.2000, state: 'Madhya Pradesh', district: 'Panna' },
+    operationalStatus: 'Active',
+    productionVolume: 2.1,
+    riskLevel: 'Low',
+    sensorsOnline: 52,
+    totalSensors: 60,
+    lastUpdate: '2024-01-15T08:45:00Z',
+    alertsActive: 0
+  },
+  {
+    id: 'mine-016',
+    name: 'Joda Iron Ore Mine',
+    type: 'Iron Ore',
+    location: { lat: 21.9900, lng: 85.4300, state: 'Odisha', district: 'Keonjhar' },
+    operationalStatus: 'Active',
+    productionVolume: 22.7,
+    riskLevel: 'Moderate',
+    sensorsOnline: 79,
+    totalSensors: 85,
+    lastUpdate: '2024-01-15T09:50:00Z',
+    alertsActive: 2
   }
+
 ];
 
 // Generate sample sensor data
