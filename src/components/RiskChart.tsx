@@ -92,10 +92,12 @@ const RiskChart: React.FC<RiskChartProps> = ({ data, type, title, className = ''
     labels: data.map(item => item.label),
     datasets: [
       {
-        label: 'Risk Events',
+        label: type === 'bar' ? 'Production Volume (MT)' : 'Risk Events',
         data: data.map(item => item.value),
-        borderColor: 'hsl(var(--primary))',
-        backgroundColor: type === 'bar' ? 'hsl(var(--primary) / 0.8)' : 'hsl(var(--primary) / 0.1)',
+        borderColor: data.map(item => item.color || 'hsl(var(--primary))'),
+        backgroundColor: type === 'bar' 
+          ? data.map(item => item.color ? `${item.color}80` : 'hsl(var(--primary) / 0.8)')
+          : data.map(item => item.color ? `${item.color}20` : 'hsl(var(--primary) / 0.1)'),
         borderWidth: 2,
         fill: type === 'line',
         tension: 0.4

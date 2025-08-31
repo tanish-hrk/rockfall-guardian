@@ -126,7 +126,11 @@ def load_mine_data():
                     "Coal", "Coal", "Coal", "Steel", "Steel", "Steel"
                 ][i-1] if i <= 16 else random.choice(["Coal", "Iron Ore", "Copper", "Limestone"]),
                 "operationalStatus": random.choice(["Active", "Inactive", "Under Development"]),
-                "productionVolume": f"{random.uniform(10, 50):.1f} MT",
+                "productionVolume": [
+                    25.3, 28.7, 15.2, 32.1, 18.9,
+                    22.4, 8.6, 19.8, 16.5, 14.2,
+                    27.3, 21.7, 23.9, 45.2, 38.7, 41.3
+                ][i-1] if i <= 16 else round(random.uniform(10, 50), 1),
                 "sensorsOnline": random.randint(40, 50),
                 "totalSensors": random.randint(100, 150),
                 "riskLevel": current_risk,

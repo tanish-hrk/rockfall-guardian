@@ -193,22 +193,30 @@ const Dashboard: React.FC<DashboardProps> = ({ onNavigateToLanding }) => {
 
   // Risk distribution data from real API data
   const riskDistribution = [
-    { label: 'Low', value: realMinesData.filter(m => m.riskLevel === 'Low').length, color: '#10b981' },
+    { label: 'Low', value: realMinesData.filter(m => m.riskLevel === 'Low').length, color: '#22c55e' },
     { label: 'Moderate', value: realMinesData.filter(m => m.riskLevel === 'Moderate').length, color: '#f59e0b' },
-    { label: 'High', value: highRiskMines, color: '#f97316' },
-    { label: 'Critical', value: criticalMines, color: '#ef4444' }
+    { label: 'High', value: realMinesData.filter(m => m.riskLevel === 'High').length, color: '#f97316' },
+    { label: 'Critical', value: realMinesData.filter(m => m.riskLevel === 'Critical').length, color: '#ef4444' }
   ];
 
-  // Production data from real mines
-  const productionData = realMinesData.slice(0, 6).map(mine => ({
-    label: mine.name.split(' ')[0],
-    value: mine.productionVolume || 0
-  }));
+  // Production data from real mines - sorted by production volume
+  const productionData = realMinesData
+    .filter(mine => mine.productionVolume && mine.productionVolume > 0)
+    .sort((a, b) => (b.productionVolume || 0) - (a.productionVolume || 0))
+    .slice(0, 8)
+    .map(mine => ({
+      label: mine.name.length > 15 ? mine.name.substring(0, 15) + '...' : mine.name,
+      value: mine.productionVolume || 0,
+      color: mine.type === 'Copper' ? '#f59e0b' : 
+             mine.type === 'Coal' ? '#22c55e' : 
+             mine.type === 'Iron Ore' ? '#ef4444' :
+             mine.type === 'Bauxite' ? '#3b82f6' : '#8b5cf6'
+    }));
 
   const systemMetrics = [
-    { label: 'AI Accuracy', value: '94.2%', icon: Target, color: 'text-green-500', bg: 'bg-green-500/10' },
+    { label: 'AI Accuracy', value: '84.2%', icon: Target, color: 'text-green-500', bg: 'bg-green-500/10' },
     { label: 'Response Time', value: '< 2s', icon: Clock, color: 'text-blue-500', bg: 'bg-blue-500/10' },
-    { label: 'Uptime', value: '99.9%', icon: CheckCircle, color: 'text-purple-500', bg: 'bg-purple-500/10' },
+    { label: 'Uptime', value: '80%', icon: CheckCircle, color: 'text-purple-500', bg: 'bg-purple-500/10' },
     { label: 'Data Points', value: '2.1M', icon: BarChart3, color: 'text-orange-500', bg: 'bg-orange-500/10' }
   ];
 
@@ -318,7 +326,7 @@ const Dashboard: React.FC<DashboardProps> = ({ onNavigateToLanding }) => {
               <div className="flex items-center justify-between">
                 <div>
                   <p className="text-purple-600 dark:text-purple-400 text-sm font-medium mb-1">AI Predictions</p>
-                  <p className="text-3xl font-bold text-purple-700 dark:text-purple-300">94.2%</p>
+                  <p className="text-3xl font-bold text-purple-700 dark:text-purple-300">84.2%</p>
                   <p className="text-purple-500 dark:text-purple-400 text-xs mt-1">Accuracy rate</p>
                 </div>
                 <div className="p-3 bg-purple-500/10 rounded-lg">
@@ -410,7 +418,7 @@ const Dashboard: React.FC<DashboardProps> = ({ onNavigateToLanding }) => {
                         </div>
                       </div>
                       <div className="flex items-center justify-between text-xs text-slate-600 dark:text-slate-400">
-                        <span>{mine.mineType || mine.type} • {mine.location?.state || 'Unknown'}</span>
+                        <span>{mine.type} • {mine.location?.state || 'Unknown'}</span>
                         <span>{mine.sensorsOnline || 0}/{mine.totalSensors || 0} sensors</span>
                       </div>
                       <div className="grid grid-cols-2 gap-2 mt-2 text-xs">
@@ -433,7 +441,7 @@ const Dashboard: React.FC<DashboardProps> = ({ onNavigateToLanding }) => {
                       </div>
                       <div className="flex items-center justify-between mt-2 text-xs">
                         <span className="text-slate-500 dark:text-slate-500">
-                          Production: {mine.productionVolume || 'N/A'} MT
+                          Production: {mine.productionVolume ? `${mine.productionVolume} MT` : 'N/A'}
                         </span>
                         <Badge
                           variant={mine.riskLevel === 'Critical' ? 'destructive' :
@@ -581,7 +589,7 @@ const Dashboard: React.FC<DashboardProps> = ({ onNavigateToLanding }) => {
             <CardContent>
               <RiskChart
                 data={productionData}
-                type="line"
+                type="bar"
                 title=""
               />
             </CardContent>
