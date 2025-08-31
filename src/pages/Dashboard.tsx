@@ -97,7 +97,7 @@ const Dashboard: React.FC<DashboardProps> = ({ onNavigateToLanding }) => {
   const [lastUpdate, setLastUpdate] = useState<string>('');
 
   // API base URL
-  const API_BASE = 'https://rock-server-eight.vercel.app';
+  const API_BASE = 'http://localhost:8000';
 
   // Fetch functions
   const fetchMinesData = async () => {

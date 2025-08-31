@@ -29,7 +29,7 @@ const SensorCharts: React.FC<SensorChartsProps> = ({ mineId, mineName }) => {
 
   const fetchSensorData = useCallback(async () => {
     try {
-      const response = await fetch(`https://rock-server-eight.vercel.app/api/mines/${mineId}/sensor-data`);
+      const response = await fetch(`http://localhost:8000/api/mines/${mineId}/sensor-data`);
       if (!response.ok) throw new Error('Failed to fetch sensor data');
       const data = await response.json();
       setSensorData(data);
